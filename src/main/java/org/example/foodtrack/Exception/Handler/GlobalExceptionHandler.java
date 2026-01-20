@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new FoodDiaryResponse(
-                        "Something went wrong",
+                        "Something went wrong : "+ ex.getMessage(),
                         HttpStatus.INTERNAL_SERVER_ERROR.value()
                 ));
     }
