@@ -1,6 +1,7 @@
 package org.example.foodtrack.Controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.foodtrack.Dto.Request.LoginRequest;
 import org.example.foodtrack.Dto.Response.FoodDiaryResponse;
 import org.example.foodtrack.Dto.Request.RegisterRequest;
 import org.example.foodtrack.Service.UserImpl;
@@ -31,19 +32,10 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(foodDiaryResponse);
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-//
-//        User user = userRepository.findByEmail(request.getEmail())
-//                .orElseThrow(() -> new RuntimeException("User not found"));
-//
-//        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-//            return ResponseEntity.badRequest().body("Invalid password");
-//        }
-//
-//        String token = jwtUtil.generateToken(user.getEmail());
-//        return ResponseEntity.ok(token);
-//    }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        return ResponseEntity.ok("token");
+    }
 
 
 }
