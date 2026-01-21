@@ -1,6 +1,7 @@
 package org.example.foodtrack.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.foodtrack.Dto.Request.LoginRequest;
 import org.example.foodtrack.Dto.Request.RegisterRequest;
 import org.example.foodtrack.Dto.Response.FoodDiaryResponse;
@@ -14,10 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserImpl {
 
     private final UserRepository userRepository;
@@ -38,7 +39,7 @@ public class UserImpl {
             user.setName(registerRequest.getName());
             user.setEmail(registerRequest.getEmail());
             user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-
+            user.setIsPro(false);
             userRepository.save(user);
 
             return new FoodDiaryResponse(
@@ -46,27 +47,27 @@ public class UserImpl {
                     HttpStatus.CREATED.value()
             );
         } catch (Exception ex) {
-            throw new BadRequestException("Error in userRegister Impl"+ex.getMessage());
+            throw new BadRequestException("Error in userRegister Impl");
         }
 
     }
 
     public FoodDiaryResponse userLogin(LoginRequest loginRequest) {
-        try {
-            Optional<User> user = userRepository.findByEmail(loginRequest.getEmail());
-            if (user.isEmpty()) {
-                throw new NotFoundException("User not Founded");
-            }
 
-            if (!passwordEncoder.matches(loginRequest.getPassword(), user.get().getPassword())) {
-                throw new BadRequestException("Wrong Password");
-            }
+        User user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
-            String token = jwtUtil.generateToken(user.get().getEmail());
-            return new FoodDiaryResponse(token,"User Login Successfully",HttpStatus.OK.value());
-        } catch (Exception ex) {
-            throw new BadRequestException("Error in UserLongin Impl"+ex.getMessage());
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            log.info("Wrong password");
+            throw new BadRequestException("Wrong password");
         }
 
+        String token = jwtUtil.generateToken(user.getEmail());
+        return new FoodDiaryResponse(
+                "User Login Successfully",
+                HttpStatus.OK.value(),
+                token
+        );
     }
+
 }
