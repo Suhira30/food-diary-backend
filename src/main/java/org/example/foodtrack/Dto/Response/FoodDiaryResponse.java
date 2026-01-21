@@ -13,15 +13,16 @@ public class FoodDiaryResponse {
     private Object data;
     private String message;
     private int statusCode;
-
-    public FoodDiaryResponse(String token, String message, int statusCode) {
-        this.data = token;
-        this.message = message;
-        this.statusCode = statusCode;
-    }
+    private String token;
 
     public FoodDiaryResponse(String message, int statusCode) {
         this.message = message;
         this.statusCode = statusCode;
+    }
+
+    public FoodDiaryResponse(String message, int value, String token) {
+        this.token = token;
+        this.message = message;
+        this.statusCode = value;
     }
 }
