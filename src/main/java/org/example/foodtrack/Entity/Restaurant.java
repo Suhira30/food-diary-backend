@@ -9,7 +9,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @AllArgsConstructor
 @NoArgsConstructor
