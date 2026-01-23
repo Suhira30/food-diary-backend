@@ -40,4 +40,10 @@ public class GlobalExceptionHandler {
                         HttpStatus.INTERNAL_SERVER_ERROR.value()
                 ));
     }
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<FoodDiaryResponse> handleForbidden(ForbiddenException ex) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new FoodDiaryResponse(ex.getMessage(), HttpStatus.FORBIDDEN.value()));
+    }
 }
