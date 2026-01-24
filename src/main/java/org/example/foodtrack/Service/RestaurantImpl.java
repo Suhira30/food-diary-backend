@@ -24,7 +24,7 @@ public class RestaurantImpl {
             Optional<User> user= Optional.ofNullable(userRepository.findByEmail(email)
                     .orElseThrow(() -> new NotFoundException("User not founded")));
             if(user.get().getIsPro()==null || !user.get().getIsPro()){
-                throw new ForbiddenException("Only Pro userds can create restaurants.Please upgrade to pro");
+                throw new ForbiddenException("Only Pro users can create restaurants.Please upgrade to pro");
             }
             if(createRestaurantReq.getName()==null || createRestaurantReq.getName().isEmpty()){
                 throw new BadRequestException("Restaurant name is required");
