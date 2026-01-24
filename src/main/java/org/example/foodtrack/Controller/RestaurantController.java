@@ -8,6 +8,7 @@ import org.example.foodtrack.Service.RestaurantImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,9 +19,9 @@ public class RestaurantController {
     private final RestaurantImpl restaurantImpl;
 
     @RequestMapping("/add/retaurant")
-    public ResponseEntity<RestaurantResponse> createRestaurant(CreateRestaurantReq createRestaurantReq, Authentication authentication) {
+    public ResponseEntity<RestaurantResponse> createRestaurant(CreateRestaurantReq createRestaurantReq, Authentication authentication, @RequestParam(defaultValue = "false") boolean force) {
         String email = authentication.name();
-        RestaurantResponse restaurantResponse = restaurantImpl.createRestaurant(createRestaurantReq, email);
+        RestaurantResponse restaurantResponse = restaurantImpl.createRestaurant(createRestaurantReq, email,force);
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantResponse);
     }
 
