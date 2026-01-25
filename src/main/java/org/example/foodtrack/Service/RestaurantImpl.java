@@ -3,29 +3,39 @@ package org.example.foodtrack.Service;
 import lombok.RequiredArgsConstructor;
 import org.example.foodtrack.Dto.Request.CreateRestaurantReq;
 import org.example.foodtrack.Dto.Response.DuplicateRestaurantResponse;
+import org.example.foodtrack.Dto.Response.PotentialDuplicate;
 import org.example.foodtrack.Dto.Response.RestaurantResponse;
 import org.example.foodtrack.Entity.Restaurant;
 import org.example.foodtrack.Entity.User;
 import org.example.foodtrack.Exception.BadRequestException;
+import org.example.foodtrack.Exception.ConflictException;
 import org.example.foodtrack.Exception.Handler.ForbiddenException;
 import org.example.foodtrack.Exception.NotFoundException;
+import org.example.foodtrack.Repo.RestaurantRepo;
 import org.example.foodtrack.Repo.UserRepository;
+import org.example.foodtrack.Util.StringSimilarityUtil;
 import org.springframework.stereotype.Service;
-
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class RestaurantImpl {
 
     private final UserRepository userRepository;
+    private final StringSimilarityUtil similarityUtil;
+    private final RestaurantRepo restaurantRepository;
+    private static final double SIMILARITY_THRESHOLD = 85.0;
 
     public RestaurantResponse createRestaurant(CreateRestaurantReq createRestaurantReq, String email,boolean force) {
 
-        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException("User not founded")));
-        if (user.get().getIsPro() == null || !user.get().getIsPro()) {
-            throw new ForbiddenException("Only Pro users can create restaurants.Please upgrade to pro");
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        if (user.getIsPro() == null || !user.getIsPro()) {
+            throw new ForbiddenException("Only Pro users can create restaurants. Please upgrade to Pro!");
         }
         if (createRestaurantReq.getName() == null || createRestaurantReq.getName().isEmpty()) {
             throw new BadRequestException("Restaurant name is required");
