@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.foodtrack.Dto.Request.LoginRequest;
 import org.example.foodtrack.Dto.Request.RegisterRequest;
+import org.example.foodtrack.Dto.Response.AuthResponse;
 import org.example.foodtrack.Dto.Response.FoodDiaryResponse;
+import org.example.foodtrack.Dto.Response.UserInfo;
 import org.example.foodtrack.Entity.User;
 import org.example.foodtrack.Exception.BadRequestException;
 import org.example.foodtrack.Exception.ConflictException;
@@ -25,12 +27,18 @@ public class UserImpl {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public FoodDiaryResponse userRegister(RegisterRequest registerRequest) {
-        try {
+    public AuthResponse userRegister(RegisterRequest registerRequest) {
             if(registerRequest.getEmail() == null || registerRequest.getEmail().isBlank()) {
                 throw new BadRequestException("Email is required");
             }
+            if (registerRequest.getName() == null || registerRequest.getName().isBlank()) {
+                throw new BadRequestException("Name is required");
+            }
 
+            // Validate password
+            if (registerRequest.getPassword() == null || registerRequest.getPassword().length() < 6) {
+                throw new BadRequestException("Password must be at least 6 characters");
+            }
             if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
                 throw new ConflictException("Email already exists");
             }
@@ -39,34 +47,44 @@ public class UserImpl {
             user.setName(registerRequest.getName());
             user.setEmail(registerRequest.getEmail());
             user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-            user.setIsPro(false);
+            user.setIsPro(true);
             userRepository.save(user);
 
-            return new FoodDiaryResponse(
-                    "User registered successfully",
+            return new AuthResponse(
+                    "User registered successfully. Please login.",
                     HttpStatus.CREATED.value()
             );
-        } catch (Exception ex) {
-            throw new BadRequestException("Error in userRegister Impl");
-        }
 
     }
 
-    public FoodDiaryResponse userLogin(LoginRequest loginRequest) {
+    public AuthResponse userLogin(LoginRequest loginRequest) {
+        if (loginRequest.getEmail() == null || loginRequest.getEmail().isBlank()) {
+            throw new BadRequestException("Email is required");
+        }
 
+        if (loginRequest.getPassword() == null || loginRequest.getPassword().isBlank()) {
+            throw new BadRequestException("Password is required");
+        }
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            log.info("Wrong password");
+            log.warn("Failed login attempt for email: {}", loginRequest.getEmail());
             throw new BadRequestException("Wrong password");
         }
 
         String token = jwtUtil.generateToken(user.getEmail());
-        return new FoodDiaryResponse(
-                "User Login Successfully",
+        UserInfo userInfo = new UserInfo(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getIsPro()
+        );
+        return new AuthResponse(
+                "Login successful",
                 HttpStatus.OK.value(),
-                token
+                token,
+                userInfo
         );
     }
 
