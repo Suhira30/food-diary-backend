@@ -2,16 +2,21 @@ package org.example.foodtrack.Entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.example.foodtrack.Dto.Request.CreateRestaurantReq;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.Id;
 
 import java.time.LocalDateTime;
 
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Table(name = "restaurants",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"name", "location"})
@@ -99,7 +104,8 @@ public class Restaurant {
         this.location = createRestaurantReq.getLocation();
         this.cuisine = createRestaurantReq.getCuisine();
         this.imageUrl = createRestaurantReq.getImageUrl();
-//        this.createdBy()=user;
+        this.createdBy=user;
+        this.createdByName=user.getName();
 
 
     }
