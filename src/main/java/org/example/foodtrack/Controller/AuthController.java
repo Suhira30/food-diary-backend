@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.example.foodtrack.Dto.Request.LoginRequest;
 import org.example.foodtrack.Dto.Request.RegisterRequest;
 import org.example.foodtrack.Dto.Response.AuthResponse;
-import org.example.foodtrack.Dto.Response.FoodDiaryResponse;
 import org.example.foodtrack.Service.UserImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

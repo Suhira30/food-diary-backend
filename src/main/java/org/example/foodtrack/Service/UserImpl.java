@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.foodtrack.Dto.Request.LoginRequest;
 import org.example.foodtrack.Dto.Request.RegisterRequest;
 import org.example.foodtrack.Dto.Response.AuthResponse;
-import org.example.foodtrack.Dto.Response.FoodDiaryResponse;
 import org.example.foodtrack.Dto.Response.UserInfo;
 import org.example.foodtrack.Entity.User;
 import org.example.foodtrack.Exception.BadRequestException;

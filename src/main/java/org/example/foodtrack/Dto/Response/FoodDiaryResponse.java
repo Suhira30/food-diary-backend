@@ -20,9 +20,9 @@ public class FoodDiaryResponse {
         this.statusCode = statusCode;
     }
 
-    public FoodDiaryResponse(String message, int value, String token) {
-        this.data = token;
-        this.message = message;
-        this.statusCode = value;
-    }
+//    public FoodDiaryResponse(String message, int value, String token) {
+//        this.data = token;
+//        this.message = message;
+//        this.statusCode = value;
+//    }
 }
