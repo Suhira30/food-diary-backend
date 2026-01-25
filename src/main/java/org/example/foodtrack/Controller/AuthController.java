@@ -3,6 +3,7 @@ package org.example.foodtrack.Controller;
 import lombok.RequiredArgsConstructor;
 import org.example.foodtrack.Dto.Request.LoginRequest;
 import org.example.foodtrack.Dto.Request.RegisterRequest;
+import org.example.foodtrack.Dto.Response.AuthResponse;
 import org.example.foodtrack.Dto.Response.FoodDiaryResponse;
 import org.example.foodtrack.Service.UserImpl;
 import org.springframework.http.HttpStatus;
@@ -23,15 +24,15 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<FoodDiaryResponse> register(@RequestBody RegisterRequest request) {
-        FoodDiaryResponse foodDiaryResponse = userImpl.userRegister(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(foodDiaryResponse);
+    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+        AuthResponse authResponse = userImpl.userRegister(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(authResponse);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<FoodDiaryResponse> login(@RequestBody LoginRequest request) {
-        FoodDiaryResponse foodDiaryResponse = userImpl.userLogin(request);
-        return ResponseEntity.status(HttpStatus.OK).body(foodDiaryResponse);
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+        AuthResponse authResponse = userImpl.userLogin(request);
+        return ResponseEntity.status(HttpStatus.OK).body(authResponse);
     }
 
 }
