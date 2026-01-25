@@ -33,20 +33,92 @@ public class RestaurantImpl {
         if (createRestaurantReq.getLocation() == null || createRestaurantReq.getLocation().isBlank()) {
             throw new BadRequestException("Restaurant location is required");
         }
-//        if (!force) {
-//            DuplicateRestaurantResponse duplicateCheck = checkDuplicates(request);
-//            if (duplicateCheck.isHasDuplicates()) {
-//                throw new ConflictException(
-//                        "Similar restaurants found: " +
-//                                duplicateCheck.getPotentialDuplicates().stream()
-//                                        .map(d -> d.getName() + " at " + d.getLocation())
-//                                        .collect(Collectors.joining(", "))
-//                );
-//            }
-//        }
+        if (!force) {
+            DuplicateRestaurantResponse duplicateCheck = checkDuplicates(createRestaurantReq);
+            if (duplicateCheck.isHasDuplicates()) {
+                throw new ConflictException(
+                        "Similar restaurants found: " +
+                                duplicateCheck.getPotentialDuplicates().stream()
+                                        .map(d -> d.getName() + " at " + d.getLocation())
+                                        .collect(Collectors.joining(", "))
+                );
+            }
+        }
 
-        Restaurant restaurant = new Restaurant(createRestaurantReq, user.get());
-        return null;
+        Restaurant restaurant = new Restaurant(createRestaurantReq, user);
+        Restaurant savedRestaurant = restaurantRepository.save(restaurant);
+        return mapToResponse(savedRestaurant);
 
+    }
+
+    public DuplicateRestaurantResponse checkDuplicates(CreateRestaurantReq request) {
+        List<PotentialDuplicate> duplicates = new ArrayList<>();  // Now uses separate class
+
+        String normalizedName = similarityUtil.normalize(request.getName());
+        String normalizedLocation = similarityUtil.normalize(request.getLocation());
+
+        // Check for exact match
+        restaurantRepository.findByNormalizedNameAndNormalizedLocation(
+                        normalizedName, normalizedLocation)
+                .ifPresent(r -> duplicates.add(new PotentialDuplicate(
+                        r.getId(),
+                        r.getName(),
+                        r.getLocation(),
+                        100.0,
+                        r.getCreatedByName()
+                )));
+
+        // Find similar restaurants
+        List<Restaurant> similarRestaurants = restaurantRepository
+                .findSimilarByNormalizedName(normalizedName);
+
+        for (Restaurant restaurant : similarRestaurants) {
+            double nameSimilarity = similarityUtil.calculateSimilarity(
+                    request.getName(), restaurant.getName());
+            double locationSimilarity = similarityUtil.calculateSimilarity(
+                    request.getLocation(), restaurant.getLocation());
+
+            double avgSimilarity = (nameSimilarity + locationSimilarity) / 2;
+
+            if (avgSimilarity >= SIMILARITY_THRESHOLD) {
+                boolean alreadyAdded = duplicates.stream()
+                        .anyMatch(d -> d.getId().equals(restaurant.getId()));
+
+                if (!alreadyAdded) {
+                    duplicates.add(new PotentialDuplicate(
+                            restaurant.getId(),
+                            restaurant.getName(),
+                            restaurant.getLocation(),
+                            Math.round(avgSimilarity * 10.0) / 10.0,
+                            restaurant.getCreatedByName()
+                    ));
+                }
+            }
+        }
+
+        if (!duplicates.isEmpty()) {
+            return new DuplicateRestaurantResponse(
+                    true,
+                    "Similar restaurants found. Please check if your restaurant already exists.",
+                    duplicates
+            );
+        }
+
+        return new DuplicateRestaurantResponse(false, "No duplicates found", null);
+    }
+    private RestaurantResponse mapToResponse(Restaurant restaurant) {
+        RestaurantResponse response = new RestaurantResponse(restaurant);
+        response.setId(restaurant.getId());
+        response.setName(restaurant.getName());
+        response.setDescription(restaurant.getDescription());
+        response.setLocation(restaurant.getLocation());
+        response.setCuisine(restaurant.getCuisine());
+        response.setImageUrl(restaurant.getImageUrl());
+        response.setCreatedByName(restaurant.getCreatedByName());
+        response.setCreatedById(restaurant.getCreatedBy() != null ? restaurant.getCreatedBy().getId() : null);
+        response.setAverageRating(restaurant.getAverageRating());
+        response.setTotalReviews(restaurant.getTotalReviews());
+        response.setCreatedAt(restaurant.getCreatedAt());
+        return response;
     }
 }
