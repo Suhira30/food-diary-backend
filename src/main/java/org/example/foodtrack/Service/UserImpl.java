@@ -46,7 +46,7 @@ public class UserImpl {
             user.setName(registerRequest.getName());
             user.setEmail(registerRequest.getEmail());
             user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-            user.setIsPro(true);
+            user.setIsPro(false);
             userRepository.save(user);
 
             return new AuthResponse(
