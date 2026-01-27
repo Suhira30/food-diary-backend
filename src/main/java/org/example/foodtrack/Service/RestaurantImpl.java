@@ -1,6 +1,7 @@
 package org.example.foodtrack.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.foodtrack.Dto.Request.CreateRestaurantReq;
 import org.example.foodtrack.Dto.Response.DuplicateRestaurantResponse;
 import org.example.foodtrack.Dto.Response.PotentialDuplicate;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RestaurantImpl {
 
     private final UserRepository userRepository;
@@ -130,4 +132,20 @@ public class RestaurantImpl {
         response.setCreatedAt(restaurant.getCreatedAt());
         return response;
     }
+    public List<RestaurantResponse> getAllRestaurants() {
+        log.info("Fetching all restaurants");
+        List<Restaurant> restaurants = restaurantRepository.findAllByOrderByCreatedAtDesc();
+        return restaurants.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    // Get restaurant by ID
+    public RestaurantResponse getRestaurantById(Long id) {
+        log.info("Fetching restaurant by ID: {}", id);
+        Restaurant restaurant = restaurantRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Restaurant not found with ID: " + id));
+        return mapToResponse(restaurant);
+    }
+
 }
