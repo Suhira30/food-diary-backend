@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/food-diary")
@@ -25,4 +27,16 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantResponse);
     }
 
+    @GetMapping("/all/restaurant")
+    public ResponseEntity<List<RestaurantResponse>> getAllRestaurants() {
+        List<RestaurantResponse> restaurants = restaurantImpl.getAllRestaurants();
+        return ResponseEntity.ok(restaurants);
+    }
+
+
+    @GetMapping("/restaurant/{id}")
+    public ResponseEntity<RestaurantResponse> getRestaurantById(@PathVariable Long id) {
+        RestaurantResponse restaurant = restaurantImpl.getRestaurantById(id);
+        return ResponseEntity.ok(restaurant);
+    }
 }
