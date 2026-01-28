@@ -117,6 +117,34 @@ public class RestaurantImpl {
 
         return new DuplicateRestaurantResponse(false, "No duplicates found", null);
     }
+
+    public List<RestaurantResponse> getAllRestaurants() {
+        log.info("Fetching all restaurants");
+        List<Restaurant> restaurants = restaurantRepository.findAllByOrderByCreatedAtDesc();
+        return restaurants.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    public RestaurantResponse getRestaurantById(Long id) {
+        log.info("Fetching restaurant by ID: {}", id);
+        Restaurant restaurant = restaurantRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Restaurant not found with ID: " + id));
+        return mapToResponse(restaurant);
+    }
+
+    public List<RestaurantResponse> searchRestaurants(String searchTerm) {
+        log.info("Searching restaurants with term: {}", searchTerm);
+
+        if (searchTerm == null || searchTerm.isBlank()) {
+            return getAllRestaurants();
+        }
+
+        List<Restaurant> restaurants = restaurantRepository.searchRestaurants(searchTerm);
+        return restaurants.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
     private RestaurantResponse mapToResponse(Restaurant restaurant) {
         RestaurantResponse response = new RestaurantResponse(restaurant);
         response.setId(restaurant.getId());
@@ -132,20 +160,4 @@ public class RestaurantImpl {
         response.setCreatedAt(restaurant.getCreatedAt());
         return response;
     }
-    public List<RestaurantResponse> getAllRestaurants() {
-        log.info("Fetching all restaurants");
-        List<Restaurant> restaurants = restaurantRepository.findAllByOrderByCreatedAtDesc();
-        return restaurants.stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
-
-    // Get restaurant by ID
-    public RestaurantResponse getRestaurantById(Long id) {
-        log.info("Fetching restaurant by ID: {}", id);
-        Restaurant restaurant = restaurantRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Restaurant not found with ID: " + id));
-        return mapToResponse(restaurant);
-    }
-
 }
