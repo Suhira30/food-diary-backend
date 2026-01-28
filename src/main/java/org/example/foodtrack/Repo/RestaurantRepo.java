@@ -19,12 +19,6 @@ public interface RestaurantRepo extends JpaRepository<Restaurant,Long> {
     @Query("SELECT r FROM Restaurant r WHERE r.normalizedName LIKE %:normalizedName%")
     List<Restaurant> findSimilarByNormalizedName(@Param("normalizedName") String normalizedName);
 
-    // Find restaurants in same location
-    List<Restaurant> findByNormalizedLocation(String normalizedLocation);
-
-    // Search by name only
-    List<Restaurant> findByNameContainingIgnoreCase(String name);
-
     // Advanced search
     @Query("SELECT r FROM Restaurant r WHERE " +
             "LOWER(r.name) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
@@ -34,4 +28,10 @@ public interface RestaurantRepo extends JpaRepository<Restaurant,Long> {
 
     // Get all restaurants ordered by newest first
     List<Restaurant> findAllByOrderByCreatedAtDesc();
+
+    // Find restaurants in same location
+    List<Restaurant> findByNormalizedLocation(String normalizedLocation);
+
+    // Search by name only
+    List<Restaurant> findByNameContainingIgnoreCase(String name);
 }
