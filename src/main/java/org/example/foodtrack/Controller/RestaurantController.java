@@ -13,12 +13,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/food-diary")
+@RequestMapping("/v1/food-diary/restaurant")
 public class RestaurantController {
 
     private final RestaurantImpl restaurantImpl;
 
-    @PostMapping("/add/restaurant")
+    @PostMapping("/add")
     public ResponseEntity<RestaurantResponse> createRestaurant(@RequestBody CreateRestaurantReq createRestaurantReq,
                                                                @RequestParam(defaultValue = "false") boolean force,
                                                                Authentication authentication) {
@@ -27,16 +27,23 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantResponse);
     }
 
-    @GetMapping("/all/restaurant")
+    @GetMapping("/all")
     public ResponseEntity<List<RestaurantResponse>> getAllRestaurants() {
         List<RestaurantResponse> restaurants = restaurantImpl.getAllRestaurants();
         return ResponseEntity.ok(restaurants);
     }
 
 
-    @GetMapping("/restaurant/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<RestaurantResponse> getRestaurantById(@PathVariable Long id) {
         RestaurantResponse restaurant = restaurantImpl.getRestaurantById(id);
         return ResponseEntity.ok(restaurant);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<RestaurantResponse>> searchRestaurants(
+            @RequestParam(required = false) String q) {
+        List<RestaurantResponse> restaurants = restaurantImpl.searchRestaurants(q);
+        return ResponseEntity.ok(restaurants);
     }
 }
