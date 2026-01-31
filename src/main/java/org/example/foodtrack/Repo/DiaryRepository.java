@@ -6,17 +6,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface DiaryRepository extends JpaRepository<Diary,Long> {
-    // Check if user already reviewed this restaurant
     Optional<Diary> findByUserIdAndRestaurantId(Long userId, Long restaurantId);
 
-    // Count total reviews for a restaurant
     Long countByRestaurantId(Long restaurantId);
 
-    // Calculate average rating for a restaurant
     @Query("SELECT AVG(d.rating) FROM Diary d WHERE d.restaurant.id = :restaurantId")
     Double calculateAverageRating(@Param("restaurantId") Long restaurantId);
+
+    List<Diary> findByUserIdOrderByCreatedAtDesc(Long userId);
+
+    List<Diary> findByUserIdAndIsFavoriteTrueOrderByCreatedAtDesc(Long userId);
 }
