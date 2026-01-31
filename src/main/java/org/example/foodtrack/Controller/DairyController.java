@@ -11,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/v1/food-diary/diary")
@@ -34,5 +36,25 @@ public class DairyController {
         String email = authentication.getName();
         DiaryEntryResponse response = diaryService.updateDiaryEntry(id, request, email);
         return ResponseEntity.ok(response);
+    }
+    @PostMapping("/toggle-favorite/{id}")
+    public ResponseEntity<DiaryEntryResponse> toggleFavorite(
+            @PathVariable Long id,
+            Authentication authentication) {
+        String email = authentication.getName();
+        DiaryEntryResponse response = diaryService.toggleFavorite(id, email);
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/user-diary")
+    public ResponseEntity<List<DiaryEntryResponse>> getUserDiary(Authentication authentication) {
+        String email = authentication.getName();
+        List<DiaryEntryResponse> diary = diaryService.getUserDiary(email);
+        return ResponseEntity.ok(diary);
+    }
+    @GetMapping("/favorites")
+    public ResponseEntity<List<DiaryEntryResponse>> getUserFavorites(Authentication authentication) {
+        String email = authentication.getName();
+        List<DiaryEntryResponse> favorites = diaryService.getUserFavorites(email);
+        return ResponseEntity.ok(favorites);
     }
 }
