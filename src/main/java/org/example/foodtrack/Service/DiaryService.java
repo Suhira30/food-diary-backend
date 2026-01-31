@@ -130,6 +130,31 @@ public class DiaryService {
         diary.setIsFavorite(!diary.getIsFavorite());
         Diary updated = diaryRepository.save(diary);
 
+        log.info("Favorite toggled for entry {} by user {}", entryId, user.getEmail());
+        return mapToResponse(updated);
+    }
+    public List<DiaryEntryResponse> getUserDiary(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        List<Diary> entries = diaryRepository.findByUserIdOrderByCreatedAtDesc(user.getId());
+
+        log.info("Fetching diary for user: {}, total entries: {}", email, entries.size());
+        return entries.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+    public List<DiaryEntryResponse> getUserFavorites(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        List<Diary> favorites = diaryRepository
+                .findByUserIdAndIsFavoriteTrueOrderByCreatedAtDesc(user.getId());
+
+        return favorites.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
     private DiaryEntryResponse mapToResponse(Diary diary) {
         Restaurant restaurant = diary.getRestaurant();
         log.info("DiaryEntryResponse going to be created");
