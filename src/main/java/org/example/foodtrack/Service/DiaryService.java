@@ -116,6 +116,19 @@ public class DiaryService {
         log.info("Diary entry {} updated by user {}", entryId, user.getEmail());
         return mapToResponse(updated);
     }
+    public DiaryEntryResponse toggleFavorite(Long entryId, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        Diary diary = diaryRepository.findById(entryId)
+                .orElseThrow(() -> new NotFoundException("Diary entry not found"));
+
+        if (diary.getUser().getId()!=(user.getId())) {
+            throw new BadRequestException("You can only update your own diary entries");
+        }
+
+        diary.setIsFavorite(!diary.getIsFavorite());
+        Diary updated = diaryRepository.save(diary);
 
     private DiaryEntryResponse mapToResponse(Diary diary) {
         Restaurant restaurant = diary.getRestaurant();
