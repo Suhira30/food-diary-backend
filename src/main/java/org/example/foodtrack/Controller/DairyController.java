@@ -57,4 +57,16 @@ public class DairyController {
         List<DiaryEntryResponse> favorites = diaryService.getUserFavorites(email);
         return ResponseEntity.ok(favorites);
     }
+    @GetMapping("/top-rated")
+    public ResponseEntity<List<DiaryEntryResponse>> getUserTopRated(Authentication authentication) {
+        String email = authentication.getName();
+        List<DiaryEntryResponse> topRated = diaryService.getUserTopRated(email);
+        return ResponseEntity.ok(topRated);
+    }
+    @GetMapping("/restaurant/{restaurantId}")
+    public ResponseEntity<List<DiaryEntryResponse>> getRestaurantReviews(
+            @PathVariable Long restaurantId) {
+        List<DiaryEntryResponse> reviews = diaryService.getRestaurantReviews(restaurantId);
+        return ResponseEntity.ok(reviews);
+    }
 }
