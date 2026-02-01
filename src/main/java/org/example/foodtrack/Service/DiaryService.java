@@ -158,6 +158,27 @@ public class DiaryService {
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
+    public List<DiaryEntryResponse> getUserTopRated(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        List<Diary> topRated = diaryRepository
+                .findByUserIdAndRatingGreaterThanEqualOrderByRatingDesc(user.getId(), 4.0);
+
+        return topRated.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+    public List<DiaryEntryResponse> getRestaurantReviews(Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new NotFoundException("Restaurant not found"));
+
+        List<Diary> reviews = diaryRepository.findByRestaurantIdOrderByCreatedAtDesc(restaurantId);
+
+        return reviews.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
     private DiaryEntryResponse mapToResponse(Diary diary) {
         Restaurant restaurant = diary.getRestaurant();
         log.info("DiaryEntryResponse going to be created");
