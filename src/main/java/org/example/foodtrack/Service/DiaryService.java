@@ -27,30 +27,24 @@ public class DiaryService {
     private final RestaurantRepo restaurantRepository;
     private final DiaryRepository diaryRepository;
     public DiaryEntryResponse addDiaryEntry(CreateDiaryEntryRequest request, String email) {
-        // Find user
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
-        // Find restaurant
         Restaurant restaurant = restaurantRepository.findById(request.getRestaurantId())
                 .orElseThrow(() -> new NotFoundException("Restaurant not found"));
 
-        // Validate rating
         if (request.getRating() == null || request.getRating() < 0.5 || request.getRating() > 5.0) {
             throw new BadRequestException("Rating must be between 0.5 and 5.0");
         }
 
-        // Check if user already reviewed this restaurant
         diaryRepository.findByUserIdAndRestaurantId(user.getId(), restaurant.getId())
                 .ifPresent(existing -> {
                     throw new ConflictException("You have already reviewed this restaurant. Use update instead.");
                 });
 
-        // Create diary entry
         Diary diary = new Diary(user, restaurant,request);
         Diary saved = diaryRepository.save(diary);
 
-        // Update restaurant's average rating
         updateRestaurantRating(restaurant.getId());
 
         log.info("Diary entry created for user {} and restaurant {}", user.getEmail(), restaurant.getName());
@@ -178,6 +172,30 @@ public class DiaryService {
         return reviews.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
+    }
+
+    public void deleteDiaryEntry(Long entryId, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        Diary diary = diaryRepository.findById(entryId)
+                .orElseThrow(() -> new NotFoundException("Diary entry not found"));
+
+        if (diary.getUser().getId()!=(user.getId())) {
+            throw new BadRequestException("You can only delete your own diary entries");
+        }
+
+        Long restaurantId = diary.getRestaurant().getId();
+        boolean wasVisited = diary.getIsVisited();
+
+        diaryRepository.delete(diary);
+
+        // Only update restaurant rating if it was a real review
+        if (wasVisited) {
+            updateRestaurantRating(restaurantId);
+        }
+
+        log.info("Diary entry {} deleted by user {}", entryId, user.getEmail());
     }
     private DiaryEntryResponse mapToResponse(Diary diary) {
         Restaurant restaurant = diary.getRestaurant();
