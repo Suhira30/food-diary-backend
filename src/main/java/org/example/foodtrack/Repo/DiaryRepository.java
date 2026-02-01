@@ -21,4 +21,11 @@ public interface DiaryRepository extends JpaRepository<Diary,Long> {
     List<Diary> findByUserIdOrderByCreatedAtDesc(Long userId);
 
     List<Diary> findByUserIdAndIsFavoriteTrueOrderByCreatedAtDesc(Long userId);
+
+    List<Diary> findByUserIdAndRatingGreaterThanEqualOrderByRatingDesc(
+            Long userId, Double minRating);
+
+    List<Diary> findByRestaurantIdOrderByCreatedAtDesc(Long restaurantId);
+
+
 }
