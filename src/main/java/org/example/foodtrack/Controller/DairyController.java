@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.foodtrack.Dto.Request.CreateDiaryEntryRequest;
 import org.example.foodtrack.Dto.Request.UpdateDiaryEntryRequest;
 import org.example.foodtrack.Dto.Response.DiaryEntryResponse;
+import org.example.foodtrack.Dto.Response.FoodDiaryResponse;
 import org.example.foodtrack.Service.DiaryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,5 +69,16 @@ public class DairyController {
             @PathVariable Long restaurantId) {
         List<DiaryEntryResponse> reviews = diaryService.getRestaurantReviews(restaurantId);
         return ResponseEntity.ok(reviews);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<FoodDiaryResponse> deleteDiaryEntry(
+            @PathVariable Long id,
+            Authentication authentication) {
+        String email = authentication.getName();
+        diaryService.deleteDiaryEntry(id, email);
+        return ResponseEntity.ok(new FoodDiaryResponse(
+                "Diary entry deleted successfully",
+                HttpStatus.OK.value()
+        ));
     }
 }
