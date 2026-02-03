@@ -17,6 +17,7 @@ import org.example.foodtrack.Repo.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -196,6 +197,15 @@ public class DiaryService {
         }
 
         log.info("Diary entry {} deleted by user {}", entryId, user.getEmail());
+    }
+    public DiaryEntryResponse checkUserRestaurant(Long restaurantId, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        Optional<Diary> diary = diaryRepository.findByUserIdAndRestaurantId(
+                user.getId(), restaurantId);
+
+        return diary.map(this::mapToResponse).orElse(null);
     }
     private DiaryEntryResponse mapToResponse(Diary diary) {
         Restaurant restaurant = diary.getRestaurant();
