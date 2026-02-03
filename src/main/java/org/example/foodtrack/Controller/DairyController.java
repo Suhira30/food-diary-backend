@@ -81,4 +81,12 @@ public class DairyController {
                 HttpStatus.OK.value()
         ));
     }
+    @GetMapping("/restaurant/{restaurantId}/check")
+    public ResponseEntity<DiaryEntryResponse> checkUserRestaurant(
+            @PathVariable Long restaurantId,
+            Authentication authentication) {
+        String email = authentication.getName();
+        DiaryEntryResponse response = diaryService.checkUserRestaurant(restaurantId, email);
+        return ResponseEntity.ok(response);
+    }
 }
