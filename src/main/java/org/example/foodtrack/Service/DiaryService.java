@@ -191,7 +191,6 @@ public class DiaryService {
 
         diaryRepository.delete(diary);
 
-        // Only update restaurant rating if it was a real review
         if (wasVisited) {
             updateRestaurantRating(restaurantId);
         }
