@@ -47,4 +47,23 @@ public class DiaryEntryResponse {
         this.createdAt = diary.getCreatedAt();
         this.updatedAt = diary.getUpdatedAt();
     }
+
+    public DiaryEntryResponse(Diary diary) {
+        this.id = diary.getId();
+        this.restaurantId = diary.getRestaurant().getId();
+        this.restaurantName = diary.getRestaurant().getName();
+        this.restaurantLocation = diary.getRestaurant().getLocation();
+        this.restaurantCuisine = diary.getRestaurant().getCuisine();
+        this.restaurantImageUrl = diary.getRestaurant().getImageUrl();
+        this.rating = diary.getRating();
+        this.review = diary.getReview();
+        this.visitDate = diary.getVisitDate();
+        this.isVisited = diary.getIsVisited();
+        this.isFavorite = diary.getIsFavorite();
+        this.wouldRecommend = diary.getWouldRecommend();
+        this.tags = diary.getTags();
+        this.photoUrls = diary.getPhotoUrls();
+        this.createdAt = diary.getCreatedAt();
+        this.updatedAt = diary.getUpdatedAt();
+    }
 }
