@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CreateDiaryEntryRequest {
     private Long restaurantId;
-    private Double rating;  // 0.5 to 5.0
+    private Double rating;
     private String review;
     private LocalDateTime visitDate;
     private Boolean isFavorite;
