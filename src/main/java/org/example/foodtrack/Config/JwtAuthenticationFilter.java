@@ -31,13 +31,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String authHeader = request.getHeader("Authorization");
 
-            log.info("Authorization Header: {}", authHeader);  // ⭐ ADD DEBUG LOG
+            log.info("Authorization Header: {}", authHeader);
 
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 String token = authHeader.substring(7);
                 String email = jwtUtil.extractUsername(token);
 
-                log.info("Extracted email from token: {}", email);  // ⭐ ADD DEBUG LOG
+                log.info("Extracted email from token: {}", email);
 
                 if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     if (jwtUtil.validateToken(token, email)) {
@@ -48,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                         new ArrayList<>()
                                 );
                         SecurityContextHolder.getContext().setAuthentication(authToken);
-                        log.info("JWT token validated for user: {}", email);  // ⭐ CHANGED to info
+                        log.info("JWT token validated for user: {}", email);
                     }
                 }
             }
