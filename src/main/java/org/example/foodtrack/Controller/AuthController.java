@@ -34,4 +34,9 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(authResponse);
     }
 
+    @PostMapping("/pro/register")
+    public ResponseEntity<AuthResponse> proRegister(@RequestBody RegisterRequest request) {
+        AuthResponse authResponse = userImpl.proUserRegister(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(authResponse);
+    }
 }
