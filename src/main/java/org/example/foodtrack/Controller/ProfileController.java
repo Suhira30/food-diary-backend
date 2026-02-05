@@ -3,7 +3,6 @@ import lombok.RequiredArgsConstructor;
 import org.example.foodtrack.Dto.Response.DiaryEntryResponse;
 import org.example.foodtrack.Dto.Response.UserProfileResponse;
 import org.example.foodtrack.Dto.Response.UserTimelineResponse;
-import org.example.foodtrack.Service.DiaryService;
 import org.example.foodtrack.Service.UserProfileService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -33,7 +32,6 @@ public class ProfileController {
     /**
      * Get user's complete timeline (profile + diary entries)
      * GET /v1/food-diary/profile/timeline?sortBy=latest
-     *
      * Sort options:
      * - latest (default): Sort by creation date
      * - visit-date: Sort by visit date
@@ -51,7 +49,6 @@ public class ProfileController {
     /**
      * Get filtered timeline
      * GET /v1/food-diary/profile/timeline/filter?type=favorites
-     *
      * Filter types:
      * - all: All entries
      * - favorites: Only favorites
