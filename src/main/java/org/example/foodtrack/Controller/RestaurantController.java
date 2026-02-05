@@ -1,6 +1,7 @@
 package org.example.foodtrack.Controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.example.foodtrack.Dto.Request.CreateRestaurantReq;
 import org.example.foodtrack.Dto.Response.RestaurantResponse;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/v1/food-diary/restaurant")
 public class RestaurantController {
 
@@ -23,6 +25,7 @@ public class RestaurantController {
                                                                @RequestParam(defaultValue = "false") boolean force,
                                                                Authentication authentication) {
         String email = authentication.getName();
+        log.info("email :{}",email);
         RestaurantResponse restaurantResponse = restaurantImpl.createRestaurant(createRestaurantReq, email,force);
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantResponse);
     }
