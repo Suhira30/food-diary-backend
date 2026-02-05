@@ -16,8 +16,9 @@ import org.example.foodtrack.Repo.RestaurantRepo;
 import org.example.foodtrack.Repo.UserRepository;
 import org.example.foodtrack.Util.StringSimilarityUtil;
 import org.springframework.stereotype.Service;
-import java.util.List;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,8 +31,8 @@ public class RestaurantImpl {
     private final RestaurantRepo restaurantRepository;
     private static final double SIMILARITY_THRESHOLD = 85.0;
 
-    public RestaurantResponse createRestaurant(CreateRestaurantReq createRestaurantReq, String email,boolean force) {
-
+    public RestaurantResponse createRestaurant(CreateRestaurantReq createRestaurantReq, String email, boolean force) {
+        log.info("createRestaurant :{}", createRestaurantReq);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
@@ -145,6 +146,7 @@ public class RestaurantImpl {
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
+
     private RestaurantResponse mapToResponse(Restaurant restaurant) {
         RestaurantResponse response = new RestaurantResponse(restaurant);
         response.setId(restaurant.getId());
