@@ -46,11 +46,12 @@ public class SecurityConfig {
                         // ⭐ Public endpoints (no authentication needed)
                         .requestMatchers(
                                 "/v1/food-diary/register",
+                                "/v1/food-diary/pro/register",
                                 "/v1/food-diary/login",
                                 "/v1/food-diary/test",
                                 "/v1/food-diary/own_test"
                         ).permitAll()
-                        // ⭐ All other endpoints require authentication
+                        .requestMatchers("/v1/food-diary/dairy/user-diary").authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
