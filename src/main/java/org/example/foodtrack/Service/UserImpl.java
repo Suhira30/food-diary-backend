@@ -86,5 +86,35 @@ public class UserImpl {
                 userInfo
         );
     }
+    public AuthResponse proUserRegister(RegisterRequest registerRequest) {
+        if(registerRequest.getEmail() == null || registerRequest.getEmail().isBlank()) {
+            throw new BadRequestException("Email is required");
+        }
+        if (registerRequest.getName() == null || registerRequest.getName().isBlank()) {
+            throw new BadRequestException("Name is required");
+        }
+
+        // Validate password
+        if (registerRequest.getPassword() == null || registerRequest.getPassword().length() < 6) {
+            throw new BadRequestException("Password must be at least 6 characters");
+        }
+        if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
+            throw new ConflictException("Email already exists");
+        }
+
+        User user = new User();
+        user.setName(registerRequest.getName());
+        user.setEmail(registerRequest.getEmail());
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setIsPro(true);
+        userRepository.save(user);
+
+        return new AuthResponse(
+                "User registered successfully. Please login.",
+                HttpStatus.CREATED.value()
+        );
+
+    }
+
 
 }
