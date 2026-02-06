@@ -43,6 +43,11 @@ public class RestaurantController {
         return ResponseEntity.ok(restaurant);
     }
 
+    /**
+     *
+     * @param q= cuisine,location,name
+     * @return
+     */
     @GetMapping("/search")
     public ResponseEntity<List<RestaurantResponse>> searchRestaurants(
             @RequestParam(required = false) String q) {
