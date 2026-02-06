@@ -53,6 +53,8 @@ public class ProfileController {
      * - favorites: Only favorites
      * - top-rated: 4+ stars
      * - visited: Only visited restaurants
+     * {{baseURL}}/v1/food-diary/profile/timeline/filter?type=favorites
+     * {{baseURL}}/v1/food-diary/profile/timeline/filter?type=top-rated
      */
     @GetMapping("/timeline/filter")
     public ResponseEntity<List<DiaryEntryResponse>> getFilteredTimeline(
