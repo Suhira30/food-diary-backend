@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // ⭐ Public endpoints (no authentication needed)
+
                         .requestMatchers(
                                 "/v1/food-diary/register",
                                 "/v1/food-diary/pro/register",
