@@ -46,7 +46,7 @@ public class RestaurantController {
     /**
      *
      * @param q= cuisine,location,name
-     * @return
+     * @return RestaurantResponse
      */
     @GetMapping("/search")
     public ResponseEntity<List<RestaurantResponse>> searchRestaurants(
