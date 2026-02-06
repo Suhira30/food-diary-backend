@@ -127,7 +127,7 @@ public class UserProfileService {
                         .map(this::mapDiaryToResponse)
                         .collect(Collectors.toList());
             }
-            default -> diaryService.getUserDiary(email);
+            default -> diaryService.getUserOwnDiary(email);
         };
 
         log.info("Filtered timeline for user: {}, filter: {}, count: {}",
