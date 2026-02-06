@@ -71,7 +71,7 @@ public class DairyController {
     @GetMapping("/user-diary/{Id}")
     public ResponseEntity<List<DiaryEntryResponse>> getUserDiary(Authentication authentication,@PathVariable Long Id) {
         String email = authentication.getName();
-        List<DiaryEntryResponse> diary = diaryService.getUserDiary(email);
+        List<DiaryEntryResponse> diary = diaryService.getUserDiary(email,Id);
         return ResponseEntity.ok(diary);
     }
     //own fav-------
