@@ -206,6 +206,17 @@ public class DiaryService {
 
         return diary.map(this::mapToResponse).orElse(null);
     }
+    public List<DiaryEntryResponse> getUserOwnDiary(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        List<Diary> entries = diaryRepository.findByUserIdOrderByCreatedAtDesc(user.getId());
+
+        log.info("Fetching diary for user: {}, total entries: {}", email, entries.size());
+        return entries.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
     private DiaryEntryResponse mapToResponse(Diary diary) {
         Restaurant restaurant = diary.getRestaurant();
         log.info("DiaryEntryResponse going to be created");
