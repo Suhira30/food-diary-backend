@@ -32,9 +32,9 @@ public class ProfileController {
     }
 
     /**
-     * @param sortBy
-     * @param authentication
-     * @return
+     * @param sortBy defaultValue = "latest"
+     * @param authentication authentication
+     * @return UserTimelineResponse
      */
 
     @GetMapping("/timeline")
