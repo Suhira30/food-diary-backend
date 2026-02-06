@@ -131,11 +131,11 @@ public class DiaryService {
         log.info("Favorite toggled for entry {} by user {}", entryId, user.getEmail());
         return mapToResponse(updated);
     }
-    public List<DiaryEntryResponse> getUserDiary(String email) {
+    public List<DiaryEntryResponse> getUserDiary(String email,Long userId) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
-        List<Diary> entries = diaryRepository.findByUserIdOrderByCreatedAtDesc(user.getId());
+        List<Diary> entries = diaryRepository.findByUserIdOrderByCreatedAtDesc(userId);
 
         log.info("Fetching diary for user: {}, total entries: {}", email, entries.size());
         return entries.stream()
@@ -183,7 +183,7 @@ public class DiaryService {
                 .orElseThrow(() -> new NotFoundException("Diary entry not found"));
 
         if (diary.getUser().getId()!=(user.getId())) {
-            throw new BadRequestException("You can only delete your own diary entries");
+            throw new BadRequestException("You can only delete this diary entries");
         }
 
         Long restaurantId = diary.getRestaurant().getId();
