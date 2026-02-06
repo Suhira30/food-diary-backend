@@ -20,8 +20,9 @@ public class ProfileController {
     private final UserProfileService userProfileService;
 
     /**
-     * Get current user's profile with statistics
-     * GET /v1/food-diary/profile
+     *
+     * @param authentication=authentication
+     * @return UserProfileResponse
      */
     @GetMapping("/get/user-profile")
     public ResponseEntity<UserProfileResponse> getUserProfile(Authentication authentication) {
@@ -29,13 +30,11 @@ public class ProfileController {
         UserProfileResponse profile = userProfileService.getUserProfile(email);
         return ResponseEntity.ok(profile);
     }
+
     /**
-     * Get user's complete timeline (profile + diary entries)
-     * GET /v1/food-diary/profile/timeline?sortBy=latest
-     * Sort options:
-     * - latest (default): Sort by creation date
-     * - visit-date: Sort by visit date
-     * - rating: Sort by rating (highest first)
+     * @param sortBy
+     * @param authentication
+     * @return
      */
 
     @GetMapping("/timeline")
