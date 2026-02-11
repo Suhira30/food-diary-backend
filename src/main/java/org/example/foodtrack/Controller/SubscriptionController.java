@@ -25,12 +25,10 @@ public class SubscriptionController {
     /**
      * Create checkout session
      * POST /v1/food-diary/subscription/create-checkout
-     *
      * Request body:
      * {
      *   "plan": "MONTHLY" or "YEARLY"
      * }
-     *
      * Response:
      * {
      *   "sessionId": "cs_test_...",
@@ -60,7 +58,6 @@ public class SubscriptionController {
     /**
      * Get subscription status
      * GET /v1/food-diary/subscription/status
-     *
      * Response:
      * {
      *   "isPro": true,
@@ -90,10 +87,8 @@ public class SubscriptionController {
     /**
      * Cancel subscription
      * POST /v1/food-diary/subscription/cancel
-     *
      * Cancels the user's active subscription. User will retain Pro access 
      * until the end of the current billing period.
-     *
      * Response:
      * {
      *   "message": "Subscription canceled successfully...",
@@ -130,7 +125,6 @@ public class SubscriptionController {
     /**
      * Stripe webhook endpoint
      * POST /v1/food-diary/subscription/webhook
-     *
      * This endpoint receives events from Stripe when subscription status changes.
      * Events handled:
      * - checkout.session.completed: When payment is successful
@@ -139,7 +133,6 @@ public class SubscriptionController {
      * - customer.subscription.deleted: When subscription is canceled
      * - invoice.payment_succeeded: When payment succeeds
      * - invoice.payment_failed: When payment fails
-     *
      * Note: This endpoint is NOT authenticated (allowed in SecurityConfig)
      */
     @PostMapping("/webhook")
