@@ -57,7 +57,7 @@ public class Subscription {
     @Column(name = "canceled_at")
     private LocalDateTime canceledAt;
 
-    // Payment tracking
+    // ⭐ ADD THESE FIELDS - Payment tracking
     @Column(name = "current_period_start")
     private LocalDateTime currentPeriodStart;
 
