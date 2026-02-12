@@ -32,7 +32,7 @@ public class SubscriptionController {
      * Response:
      * {
      *   "sessionId": "cs_test_...",
-     *   "checkoutUrl": "https://checkout.stripe.com/...",
+     *   "checkoutUrl": "<a href="https://checkout.stripe.com/">...</a>...",
      *   "message": "Checkout session created successfully"
      * }
      */
