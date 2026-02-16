@@ -32,34 +32,27 @@ public class Diary {
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
 
-    // Rating out of 5
     @Column(nullable = false)
-    private Double rating;
+    private Double rating; //out of 5
 
-    // User's review/experience
+
     @Column(length = 2000)
     private String review;
 
-    // Visit date
     @Column(name = "visit_date")
     private LocalDateTime visitDate;
 
-    // Mark as visited
     @Column(name = "is_visited")
     private Boolean isVisited = true;
 
-    // Mark as favorite
     @Column(name = "is_favorite")
     private Boolean isFavorite = false;
 
-    // Would recommend to others
     @Column(name = "would_recommend")
     private Boolean wouldRecommend = true;
 
-    // Tags/categories (e.g., "Date Night", "Family Dinner", "Business Lunch")
     private String tags;
 
-    // Photos uploaded by user (comma-separated URLs)
     @Column(name = "photo_urls", length = 1000)
     private String photoUrls;
 
