@@ -28,6 +28,7 @@ public class DiaryEntryResponse {
     private String photoUrls;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String userName;
 
     public DiaryEntryResponse(Diary diary, Restaurant restaurant) {
         this.id = diary.getId();
@@ -46,6 +47,7 @@ public class DiaryEntryResponse {
         this.photoUrls = diary.getPhotoUrls();
         this.createdAt = diary.getCreatedAt();
         this.updatedAt = diary.getUpdatedAt();
+        this.userName = diary.getUser() != null ? diary.getUser().getName() : null;
     }
 
     public DiaryEntryResponse(Diary diary) {
@@ -65,5 +67,6 @@ public class DiaryEntryResponse {
         this.photoUrls = diary.getPhotoUrls();
         this.createdAt = diary.getCreatedAt();
         this.updatedAt = diary.getUpdatedAt();
+        this.userName = diary.getUser() != null ? diary.getUser().getName() : null;
     }
 }
